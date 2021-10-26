@@ -37,9 +37,49 @@ namespace H2CodingExam2
     class Validator
     {
         EndUser user;
+        List<int> primeList = new List<int>();
+
+
         public Validator(EndUser user)
         {
             this.user = user;
+            InitializePrimes();
+        }
+
+        public void InitializePrimes()
+        {
+            bool hasOtherFactors = false;
+            for (int i = 2; i < 601; i++)
+            {
+                for(int j = 2; j < i; j++)
+                {
+                    if(i%j == 0)
+                    {
+                        hasOtherFactors = true;
+                        break;
+                    }
+                }
+                if (!hasOtherFactors)
+                {
+                    primeList.Add(i);
+                    Console.Write($", " + i);
+                }
+
+                hasOtherFactors = false;
+            }
+        }
+
+        private int GetNearestPrime(int input)
+        {
+            int nearestPrime = 0;
+            foreach (int prime in primeList)
+            {
+                if(Math.Abs(input - prime) < Math.Abs(input - nearestPrime))
+                {
+                    nearestPrime = prime;
+                }
+            }
+            return nearestPrime;
         }
 
         public bool Validate(string input)
@@ -62,15 +102,16 @@ namespace H2CodingExam2
         {
             List<int> inputList = user.GetInputs();
             bool isOdd = false;
-            int prime = 0;
+            int nearestPrime = 0;
             foreach (int input in inputList)
             {
                 isOdd = (input % 2 == 1);
-                prime = Math.Abs((input % 78) * 2 - 74); 
+                nearestPrime = GetNearestPrime(input);
+                
 
                 if (input != 0) {
-                    Console.WriteLine("Input " + input + "is " + (isOdd ? "Odd" : "Even")+
-                        ". its nearest prime number is: "+ prime);
+                    Console.WriteLine("Input " + input + " is " + (isOdd ? "Odd" : "Even")+
+                        ". its nearest prime number is: "+ nearestPrime);
                 }
 
                 else
