@@ -76,7 +76,6 @@ namespace H2CodingExam2
                 if (!hasOtherFactors)
                 {
                     primeList.Add(i);
-                    Console.Write($", " + i);
                 }
 
                 hasOtherFactors = false;
