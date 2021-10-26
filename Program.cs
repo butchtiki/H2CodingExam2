@@ -6,31 +6,41 @@ namespace H2CodingExam2
     class Program
     {
         EndUser user;
+        Validator validator;
 
-        public Program(EndUser user)
+        public Program(Validator validator, EndUser user)
         {
+            validator.SetUser(user);
+            this.validator = validator;
             this.user = user;
+
         }
 
         static void Main(string[] args)
         {
             
             EndUser user = new EndUser("Buts");
-            Validator validator = new Validator(user);
-            Program newProgram = new Program(user);
+            Validator validator = new Validator();
+            Program newProgram = new Program(validator, user);
 
-            Console.WriteLine("You have to input 5 numbers between 1-600");
-            string input = string.Empty;
-            for (int i = 0; i < 5; i++)
-            {
-                Console.Write("Please input #" + (i+1) + ": ");
-                input = Console.ReadLine();
-                validator.Validate(input);
-            }
+            newProgram.Start();
 
             //Evaluate
             Console.WriteLine("EVALUATING");
             validator.Evaluate();
+        }
+
+        public void Start()
+        {
+            Console.WriteLine("You have to input 5 numbers between 1-600");
+            string input = string.Empty;
+            
+            for (int i = 0; i < 5; i++)
+            {
+                Console.Write("Please input #" + (i + 1) + ": ");
+                input = Console.ReadLine();
+                user.AddInput(validator.Validate(input));
+            }
         }
     }
 
@@ -40,10 +50,14 @@ namespace H2CodingExam2
         List<int> primeList = new List<int>();
 
 
-        public Validator(EndUser user)
+        public Validator()
+        {
+            InitializePrimes();
+        }
+
+        public void SetUser(EndUser user)
         {
             this.user = user;
-            InitializePrimes();
         }
 
         public void InitializePrimes()
@@ -82,19 +96,17 @@ namespace H2CodingExam2
             return nearestPrime;
         }
 
-        public bool Validate(string input)
+        public int Validate(string input)
         {
             int output = 0;
             int.TryParse(input, out output);
             if (output != 0 && (output >= 1 && output <= 600))
             {
-                user.AddInput(output);
-                return true;
+                return output;
             }
             else
             {
-                user.AddInput(0);
-                return false;
+                return 0;
             }
         }
 
